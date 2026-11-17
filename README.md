@@ -8,6 +8,7 @@ dispositivo móvil sin necesidad de hardware especializado.
 Se aborda como caso de demostración la gestión integral de un gimnasio en Cartagena de
 Indias, permitiendo resolver los principales cuellos de botella operativos y financieros
 mediante:
+
 ● Registro y gestión de socios/clientes.
 ● Control de ventas y suscripción de membresías.
 ● Historial y registro de pagos.
