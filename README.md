@@ -10,7 +10,11 @@ Indias, permitiendo resolver los principales cuellos de botella operativos y fin
 mediante:
 
 ● Registro y gestión de socios/clientes.
+
 ● Control de ventas y suscripción de membresías.
+
 ● Historial y registro de pagos.
+
 ● Control manual de asistencia desde recepción.
+
 ● Visualización de reportes e indicadores clave (Dashboard).
