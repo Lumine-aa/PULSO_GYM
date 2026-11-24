@@ -1859,49 +1859,52 @@ document.addEventListener('input', (e) => {
 
 document.addEventListener('submit', async (e) => {
     // Guardar o editar Plan / Promoción (sin tocar pagos anteriores)
-    if (e.target.id === 'form-registro-cliente') {
-    e.preventDefault();
-    const fd = new FormData(e.target);
-    const nombre = String(fd.get('nombre')).trim();
-    const documento = String(fd.get('documento')).trim();
-    const telefono = String(fd.get('telefono')).trim();
-    const email = String(fd.get('email')).trim();
-    const password = String(fd.get('password'));
+        if (e.target.id === 'form-registro-cliente') {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const nombre = String(fd.get('nombre')).trim();
+        const documento = String(fd.get('documento')).trim();
+        const telefono = String(fd.get('telefono')).trim();
+        const email = String(fd.get('email')).trim();
+        const password = String(fd.get('password'));
 
-    if (!/^\d{5,12}$/.test(documento)) {
-        toast('El documento debe tener solo números (5 a 12 dígitos).', 'err');
-        return;
-    }
-    if (telefono && !/^\d{10}$/.test(telefono)) {
-        toast('El teléfono debe tener exactamente 10 dígitos.', 'err');
-        return;
-    }
-    if (password !== String(fd.get('confirmar'))) {
-        toast('Las contraseñas no coinciden.', 'err');
-        return;
-    }
+        if (!/^\d{5,12}$/.test(documento)) {
+            toast('El documento debe tener solo números (5 a 12 dígitos).', 'err');
+            return;
+        }
+        if (telefono && !/^\d{10}$/.test(telefono)) {
+            toast('El teléfono debe tener exactamente 10 dígitos.', 'err');
+            return;
+        }
+        if (password !== String(fd.get('confirmar'))) {
+            toast('Las contraseñas no coinciden.', 'err');
+            return;
+        }
 
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.disabled = true;
-    try {
-       const { data, error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options: { data: { nombre_completo: nombre, documento_identidad: documento, telefono } },
-});
-if (error) throw error;
-if (data.user && data.user.identities && data.user.identities.length === 0) {
-    throw new Error('Ya existe una cuenta con ese correo.');
-}
-cerrarModal();
-if (data.session) {
-    toast('✓ Cuenta creada. ¡Bienvenido a PULSO!');
-    await cargarPerfil();
-} else {
-    // Sin sesión: Supabase exige confirmar el correo antes de entrar
-    toast('📩 Cuenta creada. Confirma tu correo y luego inicia sesión.');
-}
-}
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: { data: { nombre_completo: nombre, documento_identidad: documento, telefono } },
+            });
+            if (error) throw error;
+            if (data.user && data.user.identities && data.user.identities.length === 0) {
+                throw new Error('Ya existe una cuenta con ese correo.');
+            }
+            cerrarModal();
+            if (data.session) {
+                toast('✓ Cuenta creada. ¡Bienvenido a PULSO!');
+                await cargarPerfil();
+            } else {
+                toast('📩 Cuenta creada. Confirma tu correo y luego inicia sesión.');
+            }
+        } catch (err) {
+            toast('No se pudo crear la cuenta: ' + (err.message || err), 'err');
+            btn.disabled = false;
+        }
+    }
     if (e.target.id === 'form-plan') {
         e.preventDefault();
         const fd = new FormData(e.target);
