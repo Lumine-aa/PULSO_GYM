@@ -1704,8 +1704,10 @@ function abrirModalRegistro() {
             </div>
             <button type="submit" class="btn-primary">Crear cuenta</button>
         </form>
-    `);
-} {
+        `);
+}
+
+function abrirModalPassword() {
     abrirModal('Cambiar Contraseña', `
         <form id="form-cambiar-password">
             <div class="input-group">
