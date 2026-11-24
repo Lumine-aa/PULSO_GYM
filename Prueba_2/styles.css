@@ -1807,3 +1807,25 @@ body {
     border-color: rgba(251, 191, 36, 0.45);
     color: #fde68a;
 }
+
+.login-box .login-switch {
+  display: block;
+  width: 100%;
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #a1a1aa;
+}
+.login-box .link-btn {
+  display: inline;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: #8ce8ff;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
