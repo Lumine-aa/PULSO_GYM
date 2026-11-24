@@ -1658,6 +1658,23 @@ function abrirModalNovedad() {
     `);
 }
 
+function campoPassword(id, name, placeholder) {
+    return `<div class="password-field">
+        <input type="password" id="${id}" name="${name}" required minlength="6" autocomplete="new-password" placeholder="${placeholder}">
+        <button type="button" class="password-toggle" data-action="ver-password" aria-label="Mostrar contraseña" aria-pressed="false">
+            <svg class="eye-icon eye-open" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3.2"></circle>
+            </svg>
+            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m3 3 18 18"></path>
+                <path d="M10.6 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.7 15.7 0 0 1-3.1 3.9M6.2 6.3C3.5 8.1 2 12 2 12s3.6 7 10 7c1.1 0 2.1-.2 3-.5"></path>
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"></path>
+            </svg>
+        </button>
+    </div>`;
+}
+
 function abrirModalRegistro() {
     abrirModal('Crear mi cuenta', `
         <form id="form-registro-cliente">
@@ -1670,7 +1687,7 @@ function abrirModalRegistro() {
                 <input type="text" id="reg-documento" name="documento" required inputmode="numeric" maxlength="12" placeholder="Ej: 1047458920">
             </div>
             <div class="input-group">
-                <label for="reg-telefono">Teléfono WhatsApp (10 dígitos)</label>
+                <label for="reg-telefono">Teléfono WhatsApp</label>
                 <input type="tel" id="reg-telefono" name="telefono" inputmode="numeric" maxlength="10" placeholder="Ej: 3001234567">
             </div>
             <div class="input-group">
@@ -1679,11 +1696,11 @@ function abrirModalRegistro() {
             </div>
             <div class="input-group">
                 <label for="reg-pass">Contraseña *</label>
-                <input type="password" id="reg-pass" name="password" required minlength="6" autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+                ${campoPassword('reg-pass', 'password', 'Mínimo 6 caracteres')}
             </div>
             <div class="input-group">
                 <label for="reg-pass2">Confirmar contraseña *</label>
-                <input type="password" id="reg-pass2" name="confirmar" required minlength="6" autocomplete="new-password" placeholder="••••••••">
+                ${campoPassword('reg-pass2', 'confirmar', '••••••••')}
             </div>
             <button type="submit" class="btn-primary">Crear cuenta</button>
         </form>
@@ -1790,6 +1807,15 @@ document.addEventListener('click', async (e) => {
         }
     }
 
+    if (action === 'ver-password') {
+    const input = btn.closest('.password-field').querySelector('input');
+    const mostrar = input.type === 'password';
+    input.type = mostrar ? 'text' : 'password';
+    btn.classList.toggle('is-visible', mostrar);
+    btn.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    btn.setAttribute('aria-pressed', String(mostrar));
+}
+
     if (action === 'anular-pago') {
         abrirModalAnularPago(btn.dataset.id, btn.dataset.monto);
     }
@@ -1858,26 +1884,23 @@ document.addEventListener('submit', async (e) => {
     const btn = e.target.querySelector('button[type="submit"]');
     btn.disabled = true;
     try {
-        const { data, error } = await supabaseClient.auth.signUp({
-            email,
-            password,
-            options: { data: { nombre_completo: nombre, documento_identidad: documento, telefono } },
-        });
-        if (error) throw error;
-        if (data.user && data.user.identities && data.user.identities.length === 0) {
-            throw new Error('Ya existe una cuenta con ese correo.');
-        }
-        cerrarModal();
-        if (data.session) {
-            toast('✓ Cuenta creada. ¡Bienvenido a PULSO!');
-            await cargarPerfil();
-        } else {
-            toast('📩 Cuenta creada. Confirma tu correo y luego inicia sesión.');
-        }
-    } catch (err) {
-        toast('No se pudo crear la cuenta: ' + (err.message || err), 'err');
-        btn.disabled = false;
-    }
+       const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: { data: { nombre_completo: nombre, documento_identidad: documento, telefono } },
+});
+if (error) throw error;
+if (data.user && data.user.identities && data.user.identities.length === 0) {
+    throw new Error('Ya existe una cuenta con ese correo.');
+}
+cerrarModal();
+if (data.session) {
+    toast('✓ Cuenta creada. ¡Bienvenido a PULSO!');
+    await cargarPerfil();
+} else {
+    // Sin sesión: Supabase exige confirmar el correo antes de entrar
+    toast('📩 Cuenta creada. Confirma tu correo y luego inicia sesión.');
+}
 }
     if (e.target.id === 'form-plan') {
         e.preventDefault();
