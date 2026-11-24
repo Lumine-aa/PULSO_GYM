@@ -1829,3 +1829,56 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* Ojito de contraseña dentro de los modales */
+.modal-card .password-field {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.modal-card .password-field input {
+  width: 100%;
+  padding-right: 46px;
+  box-sizing: border-box;
+}
+.modal-card .password-field .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 6px;
+  color: #a1a1aa;
+  cursor: pointer;
+}
+.modal-card .password-field .password-toggle:hover {
+  color: #ffffff;
+  background: transparent;
+}
+.modal-card .password-field .eye-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.modal-card .password-field .eye-closed {
+  display: none;
+}
+.modal-card .password-field .password-toggle.is-visible .eye-open {
+  display: none;
+}
+.modal-card .password-field .password-toggle.is-visible .eye-closed {
+  display: block;
+}
